@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------
- * Copyright (c) 2022 by Alexander Reinert
+ * Copyright (c) 2023 by Alexander Reinert
  * Author: Alexander Reinert
  * Uses parts of bcm2835_raw_uart.c. (c) 2015 by eQ-3 Entwicklung GmbH
  *
@@ -22,6 +22,11 @@
 #define BAUD 115200
 
 #define MAX_DEVICE_TYPE_LEN 64
+
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0))
+  #define class_create(__owner, __class) class_create(__class)
+  #define of_modalias_node(__node, __alias, __len) of_alias_from_compatible(__node, __alias, __len)
+#endif
 
 enum generic_raw_uart_rx_flags
 {

@@ -1,18 +1,18 @@
 ### Prequisites
 
-* Raspberry Pi 2B/3B/3B+/4B
-* Raspberry Pi OS Buster or Bullseye (32 bit image or 64 bit image; the mixed mode 32 bit image with 64 bit kernel is not supported)
+* Raspberry Pi 2B/3B/3B+/4B/5B
+* Raspberry Pi OS Bullseye or Bookworm (32 bit image or 64 bit image; the mixed mode 32 bit image with 64 bit kernel is not supported)
 
 ### Installation
 0. Create full backup of your SD card
 1. Add the public key of the repository
    ```bash
-   wget -q -O - https://www.pivccu.de/piVCCU/public.key | sudo apt-key add -
+   wget -q -O - https://apt.pivccu.de/piVCCU/public.key | sudo tee /usr/share/keyrings/pivccu.asc
    ```
 
 2. Add the package repository
    ```bash
-   sudo bash -c 'echo "deb https://www.pivccu.de/piVCCU stable main" > /etc/apt/sources.list.d/pivccu.list'
+   echo "deb [signed-by=/usr/share/keyrings/pivccu.asc] https://apt.pivccu.de/piVCCU stable main" | sudo tee /etc/apt/sources.list.d/pivccu.list
    sudo apt update
    ```
    Instead of `stable` you can also use the `testing` tree, but be aware testing sometimes means not that stable.
@@ -36,7 +36,7 @@
 6. Enable UART GPIO pins (not required on Raspberry Pi 2) (You can skip this step, if you do not use the HM-MOD-RPI-PCB or RPI-RF-MOD on GPIO header, for the HB-RF-USB this step is not neccessary)
    * Option 1: Disabled bluetooth (prefered)
       ```bash
-      sudo bash -c 'cat << EOT >> /boot/config.txt
+      sudo bash -c 'cat << EOT >> /boot/firmware/config.txt
       dtoverlay=pi3-disable-bt
       EOT'
       sudo systemctl disable hciuart.service
@@ -44,7 +44,7 @@
 
    * Option 2: Bluetooth attached to mini uart
       ```bash
-      sudo bash -c 'cat << EOT >> /boot/config.txt
+      sudo bash -c 'cat << EOT >> /boot/firmware/config.txt
       dtoverlay=pi3-miniuart-bt
       enable_uart=1
       force_turbo=1
@@ -54,8 +54,8 @@
 
 7. Disable serial console in command line (You can skip this step, if you do not use the HM-MOD-RPI-PCB or RPI-RF-MOD on GPIO header, for the HB-RF-USB this step is not neccessary)
    ```bash
-   sudo sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
-   sudo sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
+   sudo sed -i /boot/firmware/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
+   sudo sed -i /boot/firmware/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
    ```
 
 8. Add network bridge (if you are using wifi please refer to the debian documentation how to configure the network and the bridge)
