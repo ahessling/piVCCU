@@ -147,7 +147,9 @@ static int generic_raw_uart_get_device_type(struct generic_raw_uart_instance *in
 static struct file_operations generic_raw_uart_fops =
 {
   .owner = THIS_MODULE,
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0)
   .llseek = no_llseek,
+#endif
   .read = generic_raw_uart_read,
   .write = generic_raw_uart_write,
   .open = generic_raw_uart_open,

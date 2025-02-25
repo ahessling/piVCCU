@@ -61,7 +61,9 @@ static void fake_hmrf_add_to_buffer(char *buf, size_t len);
 static struct file_operations fake_hmrf_fops =
     {
         .owner = THIS_MODULE,
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0)
         .llseek = no_llseek,
+#endif
         .read = fake_hmrf_read,
         .write = fake_hmrf_write,
         .open = fake_hmrf_open,
